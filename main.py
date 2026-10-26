@@ -3,7 +3,8 @@ from flask import Flask, redirect, request
 
 app = Flask(__name__)
 
-CLIENT_ID = "1563561279363489932"
+# 👇 개발자 센터의 클라이언트 ID와 일치해야 합니다!
+CLIENT_ID = "1563849924146106500"
 REDIRECT_URI = "https://discord-bot-mafc.onrender.com/callback"
 
 
@@ -21,7 +22,6 @@ def login():
 @app.route("/callback")
 def callback():
   code = request.args.get("code")
-  # 코드가 없이 그냥 들어온 경우의 안전장치
   if not code:
     return (
         "잘못된 접근입니다. 디스코드 봇의 [인증하기] 버튼을 통해서만 이용해"
