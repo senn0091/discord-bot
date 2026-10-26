@@ -3,17 +3,31 @@ from flask import Flask, jsonify, redirect, request
 
 app = Flask(__name__)
 
-# 디스코드 애플리케이션 설정 정보 (개발자 센터 값 반영)
+# 디스코드 애플리케이션 설정 정보
 CLIENT_ID = "1563561279363489932"
 REDIRECT_URI = "https://discord-bot-mafc.onrender.com/callback"
 
 
-# 1. 서버 생존 확인용 홈 라우트
+# 1. 서버 생존 확인용 홈 라우트 (접속 시 검은 화면 대신 글자가 확실히 뜨도록 수정)
 @app.route("/")
 def home():
-  return (
-      "<h1>Discord Bot Server is Live!</h1><p>서버가 정상적으로 작동 중입니다.</p>"
-  )
+  return """
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>Discord Bot Server</title>
+        <style>
+            body { background-color: #313338; color: #ffffff; font-family: sans-serif; text-align: center; margin-top: 100px; }
+            h1 { color: #57f287; }
+        </style>
+    </head>
+    <body>
+        <h1>Discord Bot Server is Live!</h1>
+        <p>백엔드 서버가 정상적으로 작동 중입니다.</p>
+    </body>
+    </html>
+    """
 
 
 # 2. 인증 시작 라우트 (디스코드 로그인 창으로 다이렉트 이동)
@@ -69,20 +83,9 @@ def callback():
                 max-width: 90%;
                 width: 350px;
             }
-            .icon {
-                font-size: 50px;
-                margin-bottom: 10px;
-            }
-            h1 {
-                color: #57f287;
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
-            p {
-                color: #b5bac1;
-                font-size: 14px;
-                line-height: 1.5;
-            }
+            .icon { font-size: 50px; margin-bottom: 10px; }
+            h1 { color: #57f287; font-size: 24px; margin-bottom: 10px; }
+            p { color: #b5bac1; font-size: 14px; line-height: 1.5; }
         </style>
     </head>
     <body>
