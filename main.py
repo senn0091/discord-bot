@@ -3,12 +3,10 @@ from flask import Flask, jsonify, redirect, request
 
 app = Flask(__name__)
 
-# 디스코드 애플리케이션 설정 정보
 CLIENT_ID = "1563561279363489932"
 REDIRECT_URI = "https://discord-bot-mafc.onrender.com/callback"
 
 
-# 1. 서버 생존 확인용 홈 라우트 (접속 시 검은 화면 대신 글자가 확실히 뜨도록 수정)
 @app.route("/")
 def home():
   return """
@@ -30,7 +28,6 @@ def home():
     """
 
 
-# 2. 인증 시작 라우트 (디스코드 로그인 창으로 다이렉트 이동)
 @app.route("/login")
 def login():
   discord_url = (
@@ -43,7 +40,6 @@ def login():
   return redirect(discord_url, code=302)
 
 
-# 3. 인증 완료 콜백 라우트
 @app.route("/callback")
 def callback():
   code = request.args.get("code")
@@ -99,7 +95,6 @@ def callback():
     """
 
 
-# 4. 서버 복구 API 라우트
 @app.route("/api/recover", methods=["GET", "POST"])
 def api_recover():
   guild_id = request.args.get("guild_id")
