@@ -3,30 +3,38 @@ from flask import Flask, jsonify, redirect, request
 
 app = Flask(__name__)
 
-# 디스코드 애플리케이션 정보
+# 디스코드 애플리케이션 설정 정보
 CLIENT_ID = "1563849924146106500"
 REDIRECT_URI = "https://discord-bot-mafc.onrender.com/callback"
 
 
-# 1. 서버 상시 활성화 및 생존 확인 라우트
+# 1. 서버 생존 확인용 홈 라우트
 @app.route("/")
 def home():
-  return "<h1>Discord Bot Server is Live!</h1><p>서버가 정상적으로 작동 중입니다.</p>"
+  return (
+      "<h1>Discord Bot Server is Live!</h1><p>서버가 정상적으로 작동 중입니다.</p>"
+  )
 
 
-# 2. 인증 시작 라우트 (!인생생성 버튼 클릭 시 이동)
+# 2. 인증 시작 라우트 (디스코드 로그인 창으로 다이렉트 이동)
 @app.route("/login")
 def login():
-  discord_url = f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope=identify"
-  return redirect(discord_url)
+  discord_url = (
+      "https://discord.com/api/oauth2/authorize"
+      f"?client_id={CLIENT_ID}"
+      f"&redirect_uri={REDIRECT_URI}"
+      "&response_type=code"
+      "&scope=identify"
+  )
+  # 중간 리디렉션 알림 없이 디스코드 로그인 페이지로 바로 연결
+  return redirect(discord_url, code=302)
 
 
-# 3. 인증 완료 콜백 라우트 (디스코드 로그인 성공 후 돌아오는 화면)
+# 3. 인증 완료 콜백 라우트 (로그인 성공 시 예쁜 완료 화면 표시)
 @app.route("/callback")
 def callback():
   code = request.args.get("code")
 
-  # 코드가 없이 웹 주소로 바로 들어온 경우 예외 처리
   if not code:
     return """
         <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
@@ -35,8 +43,7 @@ def callback():
         </div>
         """, 400
 
-  # 인증 성공 시 브라우저에 표시할 디자인 화면
-  return f"""
+  return """
     <!DOCTYPE html>
     <html lang="ko">
     <head>
@@ -44,7 +51,7 @@ def callback():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>인증 완료</title>
         <style>
-            body {{
+            body {
                 background-color: #313338;
                 color: #ffffff;
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,8 +60,8 @@ def callback():
                 align-items: center;
                 height: 100vh;
                 margin: 0;
-            }}
-            .card {{
+            }
+            .card {
                 background-color: #2b2d31;
                 padding: 40px;
                 border-radius: 12px;
@@ -62,21 +69,21 @@ def callback():
                 box-shadow: 0 4px 15px rgba(0,0,0,0.3);
                 max-width: 90%;
                 width: 350px;
-            }}
-            .icon {{
+            }
+            .icon {
                 font-size: 50px;
                 margin-bottom: 10px;
-            }}
-            h1 {{
+            }
+            h1 {
                 color: #57f287;
                 font-size: 24px;
                 margin-bottom: 10px;
-            }}
-            p {{
+            }
+            p {
                 color: #b5bac1;
                 font-size: 14px;
                 line-height: 1.5;
-            }}
+            }
         </style>
     </head>
     <body>
@@ -90,7 +97,7 @@ def callback():
     """
 
 
-# 4. !복구 명령어용 API 라우트
+# 4. 서버 복구 API 라우트
 @app.route("/api/recover", methods=["GET", "POST"])
 def api_recover():
   guild_id = request.args.get("guild_id")
