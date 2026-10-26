@@ -3,8 +3,8 @@ from flask import Flask, jsonify, redirect, request
 
 app = Flask(__name__)
 
-# 디스코드 애플리케이션 설정 정보
-CLIENT_ID = "1563849924146106500"
+# 디스코드 애플리케이션 설정 정보 (개발자 센터 값 반영)
+CLIENT_ID = "1563561279363489932"
 REDIRECT_URI = "https://discord-bot-mafc.onrender.com/callback"
 
 
@@ -26,11 +26,10 @@ def login():
       "&response_type=code"
       "&scope=identify"
   )
-  # 중간 리디렉션 알림 없이 디스코드 로그인 페이지로 바로 연결
   return redirect(discord_url, code=302)
 
 
-# 3. 인증 완료 콜백 라우트 (로그인 성공 시 예쁜 완료 화면 표시)
+# 3. 인증 완료 콜백 라우트
 @app.route("/callback")
 def callback():
   code = request.args.get("code")
